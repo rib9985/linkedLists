@@ -1,3 +1,16 @@
+class Node {
+  constructor(data, nextNode = null, previousNode = null) {
+    this.data = null;
+    this.nextNode = nextNode;
+    this.previousNode = nextNode;
+    this.index = 0;
+  }
+
+  index() {
+    this.index = this.previousNode.index++;
+  }
+}
+
 class LinkedList {
   constructor(head = null) {
     this.head = head;
@@ -17,24 +30,31 @@ class LinkedList {
   }
 
   prepend(data) {
-    const node = new Node(data, this.tail, null);
-    this.tail = this.head;
-    this.head = node;
+    const newNode = new Node(data);
+    if (this.head === null) {
+      this.head = newNoad;
+      this.tail = newNoad;
+    } else {
+      newNode.index = this.head.index - 1;
+      newNode.nextNode = this.head;
+      this.head.previousNode = newNode;
+      this.newNode = newNode;
+    }
   }
 
   size() {
     let size = 0;
     let nodeToCheck = this.head;
     while (nodeToCheck.nextNode !== null) {
-      nodeToCheck = nodeToCheck.nextNode;
       size++;
+      nodeToCheck = nodeToCheck.nextNode;
     }
     return size;
   }
 
   at(index) {
     let nodeToCheck = this.head;
-    while (nodeToCheck.index !== index) {
+    while (nodeToCheck.index !== index && nodeToCheck.index != null) {
       nodeToCheck = nodeToCheck.nextNode;
     }
     return nodeToCheck;
@@ -49,8 +69,18 @@ class LinkedList {
   }
 
   pop() {
-    this.tail = tail().previousNode;
-    this.tail.nextNode = null;
+    if (this.tail === null) {
+      return;
+    }
+
+    const poppedNode = this.tail;
+    this.tail = poppedNode.previousNode;
+    if (this.tail !== null) {
+      this.tail.nextNode = null;
+    } else {
+      this.head = null;
+    }
+    return poppedNode.data;
   }
 
   contains(data) {
@@ -87,51 +117,65 @@ class LinkedList {
 
   insertAt(data, index) {
     const nextNode = this.at(index);
-    const prevNode = nextNode.previousNode;
-    const newNode = new Node(data, null, null, index);
-    if (prevNode) {
-      newNode.previousNode = prevNode;
-      prevNode.nextNode = newNode;
+    if (!nextNode) {
+      return;
     }
-    if (nextNode) {
-      nextNode.index += 1;
-      nextNode.previousNode = newNode;
-      let indexToUpdate = nextNode.nextNode;
-      while (indexToUpdate) {
-        indexToUpdate += 1;
-        indexToUpdate = indexToUpdate.nextNode;
-      }
+    const prevNode = nextNode.previousNode;
+    const newNode = new Node(data, nextNode, prevNode);
+    newNode.index = index;
+    if (prevNode) {
+      prevNode.nextNode = newNode;
+    } else {
+      this.head = newNode;
+    }
+    nextNode.previousNode = newNode;
+    let nodeToUpdate = nextNode;
+    while (nodeToUpdate) {
+      nodeToUpdate.index += 1;
+      nodeToUpdate = nodeToUpdate.nextNode;
     }
   }
 
   removeAt(index) {
     const removedNode = this.at(index);
+    if (!removedNode) return;
+
     const prevNode = removedNode.previousNode;
     const nextNode = removedNode.nextNode;
+
     if (prevNode) {
       prevNode.nextNode = nextNode;
+    } else {
+      this.head = nextNode;
     }
+
     if (nextNode) {
-      nextNode.index -= 1;
       nextNode.previousNode = prevNode;
-      let indexToUpdate = nextNode.nextNode;
-      while (indexToUpdate) {
-        indexToUpdate -= 1;
-        indexToUpdate = indexToUpdate.nextNode;
+      let nodeToUpdate = nextNode;
+      while (nodeToUpdate) {
+        nodeToUpdate.index -= 1;
+        nodeToUpdate = nodeToUpdate.nextNode;
       }
+    } else {
+      this.tail = prevNode;
     }
   }
 }
 
-class Node {
-  constructor(data, nextNode = null, previousNode = null) {
-    this.data = null;
-    this.nextNode = nextNode;
-    this.previousNode = nextNode;
-    this.index = 0;
-  }
-
-  index() {
-    this.index = this.previousNode.index++;
-  }
-}
+const list = new LinkedList();
+list.append(1);
+list.append(2);
+list.append(3);
+console.log(list.toString()); // ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
+list.prepend(0);
+console.log(list.toString()); // ( 0 ) -> ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
+console.log(list.size()); // 4
+console.log(list.contains(2)); // true
+console.log(list.find(3)); // 3
+console.log(list.at(2).data); // 2
+list.insertAt(1.5, 2);
+console.log(list.toString()); // ( 0 ) -> ( 1 ) -> ( 1.5 ) -> ( 2 ) -> ( 3 ) -> ( null )
+list.removeAt(1);
+console.log(list.toString()); // ( 0 ) -> ( 1.5 ) -> ( 2 ) -> ( 3 ) -> ( null )
+console.log(list.pop()); // 3
+console.log(list.toString()); // ( 0 ) -> ( 1.5 ) -> ( 2 ) -> ( null )
