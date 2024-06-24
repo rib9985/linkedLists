@@ -1,30 +1,19 @@
-class Node {
-  constructor(data, nextNode = null, previousNode = null) {
-    this.data = null;
-    this.nextNode = nextNode;
-    this.previousNode = nextNode;
-    this.index = 0;
-  }
-
-  index() {
-    this.index = this.previousNode.index++;
-  }
-}
-
+import { Node } from "./node.mjs";
 class LinkedList {
-  constructor(head = null) {
-    this.head = head;
+  constructor() {
+    this.head = null;
     this.tail = null;
   }
 
   append(data) {
     const newNode = new Node(data);
     if (this.head === null) {
-      this.head = newNoad;
-      this.tail = newNoad;
+      this.head = newNode;
+      this.tail = newNode;
     } else {
-      newNode.index = this.tail.index + 1;
+      this.tail.nextNode = newNode;
       newNode.previousNode = this.tail;
+      newNode.index = this.tail.index + 1;
       this.tail = newNode;
     }
   }
@@ -32,8 +21,8 @@ class LinkedList {
   prepend(data) {
     const newNode = new Node(data);
     if (this.head === null) {
-      this.head = newNoad;
-      this.tail = newNoad;
+      this.head = newNode;
+      this.tail = newNode;
     } else {
       newNode.index = this.head.index - 1;
       newNode.nextNode = this.head;
@@ -102,7 +91,7 @@ class LinkedList {
       }
       nodeToCheck = nodeToCheck.nextNode;
     }
-    return index;
+    return;
   }
 
   toString() {
@@ -163,19 +152,8 @@ class LinkedList {
 }
 
 const list = new LinkedList();
-list.append(1);
-list.append(2);
-list.append(3);
+list.append("foo");
+list.append("bar");
+list.append("baz");
 console.log(list.toString()); // ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
-list.prepend(0);
-console.log(list.toString()); // ( 0 ) -> ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
-console.log(list.size()); // 4
-console.log(list.contains(2)); // true
-console.log(list.find(3)); // 3
-console.log(list.at(2).data); // 2
-list.insertAt(1.5, 2);
-console.log(list.toString()); // ( 0 ) -> ( 1 ) -> ( 1.5 ) -> ( 2 ) -> ( 3 ) -> ( null )
-list.removeAt(1);
-console.log(list.toString()); // ( 0 ) -> ( 1.5 ) -> ( 2 ) -> ( 3 ) -> ( null )
-console.log(list.pop()); // 3
-console.log(list.toString()); // ( 0 ) -> ( 1.5 ) -> ( 2 ) -> ( null )
+console.log(list); // ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
