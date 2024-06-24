@@ -5,13 +5,15 @@ class LinkedList {
   }
 
   append(data) {
-    const node = new Node(data, null, this.head);
-    if ((this.head = !null)) {
-      node.index = this.head.index + 1;
+    const newNode = new Node(data);
+    if (this.head === null) {
+      this.head = newNoad;
+      this.tail = newNoad;
     } else {
-      node.index = 0;
+      newNode.index = this.tail.index + 1;
+      newNode.previousNode = this.tail;
+      this.tail = newNode;
     }
-    this.head = node;
   }
 
   prepend(data) {
@@ -82,14 +84,51 @@ class LinkedList {
     }
     return initialString + "( null )";
   }
+
+  insertAt(data, index) {
+    const nextNode = this.at(index);
+    const prevNode = nextNode.previousNode;
+    const newNode = new Node(data, null, null, index);
+    if (prevNode) {
+      newNode.previousNode = prevNode;
+      prevNode.nextNode = newNode;
+    }
+    if (nextNode) {
+      nextNode.index += 1;
+      nextNode.previousNode = newNode;
+      let indexToUpdate = nextNode.nextNode;
+      while (indexToUpdate) {
+        indexToUpdate += 1;
+        indexToUpdate = indexToUpdate.nextNode;
+      }
+    }
+  }
+
+  removeAt(index) {
+    const removedNode = this.at(index);
+    const prevNode = removedNode.previousNode;
+    const nextNode = removedNode.nextNode;
+    if (prevNode) {
+      prevNode.nextNode = nextNode;
+    }
+    if (nextNode) {
+      nextNode.index -= 1;
+      nextNode.previousNode = prevNode;
+      let indexToUpdate = nextNode.nextNode;
+      while (indexToUpdate) {
+        indexToUpdate -= 1;
+        indexToUpdate = indexToUpdate.nextNode;
+      }
+    }
+  }
 }
 
 class Node {
-  constructor(data, nextNode, previousNode) {
+  constructor(data, nextNode = null, previousNode = null) {
     this.data = null;
-    this.nextNode = null;
-    this.previousNode = null;
-    this.index = null;
+    this.nextNode = nextNode;
+    this.previousNode = nextNode;
+    this.index = 0;
   }
 
   index() {
