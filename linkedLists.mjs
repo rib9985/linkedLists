@@ -122,8 +122,13 @@ export class LinkedList {
   }
 
   insertAt(data, index) {
+    if (index < 0) {
+      this.prepend(data);
+      return;
+    }
     const nextNode = this.at(index);
     if (!nextNode) {
+      this.append(data);
       return;
     }
     const prevNode = nextNode.previousNode;
@@ -143,7 +148,11 @@ export class LinkedList {
   }
 
   removeAt(index) {
-    const removedNode = this.at(index);
+    let indexToRemove = index;
+    if (index < 0) {
+      indexToRemove = 0;
+    }
+    const removedNode = this.at(indexToRemove);
     if (!removedNode) return;
 
     const prevNode = removedNode.previousNode;
