@@ -1,5 +1,5 @@
 import { Node } from "./node.mjs";
-class LinkedList {
+export class LinkedList {
   constructor() {
     this.head = null;
     this.tail = null;
@@ -10,10 +10,11 @@ class LinkedList {
     if (this.head === null) {
       this.head = newNode;
       this.tail = newNode;
+      newNode.index = 0;
     } else {
       this.tail.nextNode = newNode;
       newNode.previousNode = this.tail;
-      newNode.index = this.tail.index + 1;
+      newNode.index = newNode.previousNode.index + 1;
       this.tail = newNode;
     }
   }
@@ -23,16 +24,22 @@ class LinkedList {
     if (this.head === null) {
       this.head = newNode;
       this.tail = newNode;
+      newNode.index = 0;
     } else {
-      newNode.index = this.head.index - 1;
-      newNode.nextNode = this.head;
-      this.head.previousNode = newNode;
-      this.newNode = newNode;
+      let startNode = this.head;
+      newNode.index = 0;
+      startNode.previousNode = newNode;
+      newNode.nextNode = startNode;
+      this.head = newNode;
+      while (startNode !== null) {
+        startNode.index += 1;
+        startNode = startNode.nextNode;
+      }
     }
   }
 
   size() {
-    let size = 0;
+    let size = 1;
     let nodeToCheck = this.head;
     while (nodeToCheck.nextNode !== null) {
       size++;
@@ -43,18 +50,26 @@ class LinkedList {
 
   at(index) {
     let nodeToCheck = this.head;
-    while (nodeToCheck.index !== index && nodeToCheck.index != null) {
+    while (nodeToCheck != null) {
+      if (nodeToCheck.index == index) {
+        return nodeToCheck;
+      }
       nodeToCheck = nodeToCheck.nextNode;
     }
     return nodeToCheck;
   }
 
-  head() {
-    return this.head;
+  getHead() {
+    const head = this.head.nextNode;
+    return head;
   }
 
-  tail() {
-    return this.tail;
+  getTail() {
+    let nodeToCheck = this.head;
+    while (nodeToCheck.nextNode != null) {
+      nodeToCheck = nodeToCheck.nextNode;
+    }
+    return nodeToCheck.data;
   }
 
   pop() {
@@ -85,20 +100,22 @@ class LinkedList {
 
   find(data) {
     let nodeToCheck = this.head;
+    let found = null;
     while (nodeToCheck != null) {
       if (nodeToCheck.data == data) {
-        return nodeToCheck.index;
+        found = nodeToCheck.index;
+        return found;
       }
       nodeToCheck = nodeToCheck.nextNode;
     }
-    return;
+    return found;
   }
 
   toString() {
     let initialString = "";
     let nodeToCheck = this.head;
     while (nodeToCheck != null) {
-      initialString + `( ${nodeToCheck.value} ) ->`;
+      initialString += `( ${nodeToCheck.data} ) -> `;
       nodeToCheck = nodeToCheck.nextNode;
     }
     return initialString + "( null )";
@@ -150,10 +167,3 @@ class LinkedList {
     }
   }
 }
-
-const list = new LinkedList();
-list.append("foo");
-list.append("bar");
-list.append("baz");
-console.log(list.toString()); // ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )
-console.log(list); // ( 1 ) -> ( 2 ) -> ( 3 ) -> ( null )

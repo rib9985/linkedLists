@@ -1,8 +1,8 @@
 export class Node {
-  constructor(data, nextNode, previousNode) {
+  constructor(data, nextNode, previousNode, index) {
     this.data = data || null;
     this.nextNode = nextNode || null;
-    this.previousNode = nextNode || null;
-    this.index = 0;
+    this.previousNode = previousNode || null;
+    this.index = index || null;
   }
 }
