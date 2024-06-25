@@ -1,4 +1,4 @@
-import { LinkedList } from "./linkedLists.mjs";
+import { LinkedList } from "./linkedList.mjs";
 const list = new LinkedList();
 list.append("foo");
 list.append("bar");
